@@ -1,0 +1,13 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: development
+    command: pnpm run start
+    env_file:
+      - ./.env
+    volumes:
+      - .:/usr/src
+  mongo:
+    image: mongo
