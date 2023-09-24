@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      target: development
+      target: production
     command: pnpm run start
     env_file:
       - ./.env
