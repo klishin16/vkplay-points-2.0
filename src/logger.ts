@@ -1,5 +1,5 @@
 class Logger {
-    public log(message: string, ...optionalParams: never[]){
+    public log(message: string, ...optionalParams: any[]){
         console.log(message, ...optionalParams)
     }
 
