@@ -20,7 +20,6 @@ if (error) {
 }
 
 const config: IConfig = {
-  env: envs.NODE_ENV,
   email: envs.EMAIL,
   password: envs.PASSWORD,
   database: envs.DATABASE
