@@ -1,6 +1,6 @@
-import { ObjectId, ObjectIdColumn } from "typeorm";
+import { PrimaryGeneratedColumn } from "typeorm";
 
 export class BaseModel {
-    @ObjectIdColumn()
-    id: ObjectId
+    @PrimaryGeneratedColumn()
+    id: number;
 }

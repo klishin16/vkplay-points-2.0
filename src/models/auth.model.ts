@@ -1,13 +1,15 @@
-import { Column, Entity } from "typeorm"
+import { Entity, JoinColumn, OneToOne } from "typeorm"
 import { BaseModel } from "./base.model.js";
 import { WsTokenModel } from "./ws-token.model.js";
 import { AuthTokenModel } from "./auth-token.model.js";
 
 @Entity()
 export class AuthModel extends BaseModel {
-    @Column(() => AuthTokenModel)
+    @OneToOne(() => AuthTokenModel)
+    @JoinColumn()
     authToken: AuthTokenModel;
 
-    @Column(() => WsTokenModel)
+    @OneToOne(() => WsTokenModel)
+    @JoinColumn()
     wsToken: WsTokenModel;
 }

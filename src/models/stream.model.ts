@@ -1,7 +1,7 @@
-import {Column, Entity} from "typeorm";
-import {BaseModel} from "./base.model";
-import {IStream} from "../types";
-import {PointsTargetModel} from "./points-target.model";
+import { Column, Entity, OneToMany } from "typeorm";
+import { BaseModel } from "./base.model";
+import { IStream } from "../types";
+import { PointsTargetModel } from "./points-target.model";
 
 @Entity()
 export class StreamModel extends BaseModel implements Partial<IStream> {
@@ -11,9 +11,9 @@ export class StreamModel extends BaseModel implements Partial<IStream> {
     @Column()
     blogUrl: string;
 
-    @Column(() => PointsTargetModel)
+    @OneToMany(() => PointsTargetModel, (points_target) => points_target.id)
     targets: PointsTargetModel[];
 
-    @Column('number', { default: 0 })
+    @Column('integer', { default: 0 })
     points: number;
 }

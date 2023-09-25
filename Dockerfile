@@ -33,5 +33,8 @@ FROM node:alpine AS production
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/build ./build
 
+COPY package*.json ./
+COPY .env ./
+
 # Start the server using the production build
 CMD [ "node", "build/main.js" ]

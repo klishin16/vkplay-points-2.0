@@ -71,8 +71,8 @@ export const startWSEngine = async (auth: AuthModel, database: DataSource)=> new
                         switch (inner_data.type) {
                             case "cp_balance_change":
                                 logger.log('WS stream balance change', ws_channels_map.get(channel)?.blogUrl, inner_data.data);
-                                const stream_repository = database.getMongoRepository(StreamModel);
-                                stream_repository.findOneAndUpdate({ blogUrl: ws_channels_map.get(channel)?.blogUrl }, { $set:  { points: inner_data.data.balance }});
+                                const stream_repository = database.getRepository(StreamModel);
+                                stream_repository.update({ blogUrl: ws_channels_map.get(channel)?.blogUrl }, { points: inner_data.data.balance });
                                 break;
                             case "cp_bonus_pending":
                                 logger.log('WS stream bonus pending', ws_channels_map.get(channel)?.blogUrl, inner_data.data.bonus);

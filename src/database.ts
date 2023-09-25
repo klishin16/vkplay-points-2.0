@@ -3,14 +3,15 @@ import { DataSource } from "typeorm";
 import { AuthModel, AuthTokenModel, BotModel, WsTokenModel } from "./models";
 import { logger } from "./logger";
 import { StreamModel } from "./models/stream.model";
+import { PointsTargetModel } from "./models/points-target.model";
 
 export const connectToDb = (config: IConfig): Promise<DataSource> => new Promise((resolve, reject) => {
     const data_source = new DataSource({
-        type: "mongodb",
-        host: config.host,
-        port: config.port,
+        type: "sqlite",
         database: config.database,
-        entities: [BotModel, AuthTokenModel, WsTokenModel, AuthModel, StreamModel]
+        entities: [BotModel, AuthTokenModel, WsTokenModel, AuthModel, StreamModel, PointsTargetModel],
+        synchronize: true,
+        logging: "all"
     });
 
     data_source.initialize()

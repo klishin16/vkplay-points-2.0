@@ -102,7 +102,7 @@ const openStream = async (bot: IBot, stream: IStream) => {
     bot.ws_engine.connectToPrivateChannel(stream);
     logger.log(`Connect to ${stream.blogUrl}, channel ${stream.wsChannelPrivate}`);
 
-    const stream_repository = bot.database.getMongoRepository(StreamModel);
+    const stream_repository = bot.database.getRepository(StreamModel);
     const exist_stream = await stream_repository.findOne({ where: { blogUrl: stream.blogUrl } });
     if (!exist_stream) {
         await stream_repository.save({

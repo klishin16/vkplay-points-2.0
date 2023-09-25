@@ -15,8 +15,8 @@ import { BotModel } from "./models";
 
 
 const getBotModel = async (database: DataSource) => {
-    const auth_repository = database.getMongoRepository(AuthModel);
-    const auth_model = await auth_repository.findOne({});
+    const auth_repository = database.getRepository(AuthModel);
+    const auth_model = await auth_repository.findOne({ where: {}, order: { id: "DESC" } });
     if (auth_model) {
         logger.log('Auth model was found!');
         return auth_model;
@@ -32,13 +32,15 @@ const getBotModel = async (database: DataSource) => {
         logger.error('Cannot get auth data');
         return;
     }
-    new_auth_model.authToken = plainToClass(AuthTokenModel, auth_data);
+    new_auth_model.authToken = await database.getRepository(AuthTokenModel).save(plainToClass(AuthTokenModel, auth_data));
+
     const ws_auth_data = await getWSToken(auth_data.accessToken, "0f25e086-385d-4442-84e8-1a818d28e79d"); //TODO clientId
     if (!ws_auth_data) {
         logger.error('Cannot get ws auth data');
         return;
     }
-    new_auth_model.wsToken = plainToClass(WsTokenModel, ws_auth_data);
+    new_auth_model.wsToken = await database.getRepository(WsTokenModel).save(plainToClass(WsTokenModel, ws_auth_data));
+    console.log('here')
     await auth_repository.save(new_auth_model);
 
     return new_auth_model;
