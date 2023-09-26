@@ -12,6 +12,9 @@ export class AuthTokenModel extends BaseModel {
     @Column()
     expiresAt: Date;
 
+    @Column()
+    clientId: string;
+
     constructor(accessToken: string, refreshToken: string, expiresAt: Date) {
         super();
         this.accessToken = accessToken;

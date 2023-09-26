@@ -64,10 +64,12 @@ export const login = async (credentials: ICredentials): Promise<IAuthToken | nul
         const auth_cookie: Serialized | undefined = token_response.config.jar?.toJSON()['cookies'].find(cookie => cookie.key === 'auth');
 
         const client_id_cookie: Serialized | undefined = token_response.config.jar?.toJSON()['cookies'].find(cookie => cookie.key === '_clientId');
-        console.log('clientIdCookie', client_id_cookie)
 
         if (!auth_cookie) {
             throw new Error(`Auth token cookie was not found`)
+        }
+        if (!client_id_cookie) {
+            throw new Error('Client id cookie was not found')
         }
         const decoded_url_cookie = decodeURIComponent(auth_cookie.value as unknown as string);
         const res = JSON.parse(decoded_url_cookie);
@@ -75,7 +77,8 @@ export const login = async (credentials: ICredentials): Promise<IAuthToken | nul
         return {
             accessToken: res.accessToken,
             refreshToken: res.refreshToken,
-            expiresAt: new Date(res.expiresAt)
+            expiresAt: new Date(res.expiresAt),
+            clientId: decodeURIComponent(client_id_cookie.value as unknown as string),
         }
     } catch (e) {
         logger.error(`Login error: ${ e }`);

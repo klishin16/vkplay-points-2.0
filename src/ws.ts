@@ -42,6 +42,7 @@ export const wsAuthenticate = (connection: websocket.connection, wsToken: string
     connection.send(token_message);
 }
 
+
 // eslint-disable-next-line no-async-promise-executor
 export const startWSEngine = async (auth: AuthModel, database: DataSource)=> new Promise<IWSEngine | null>(async (resolve, reject) => {
     const ws_channels_map = new Map<string, IStream>();

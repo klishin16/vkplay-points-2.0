@@ -40,6 +40,7 @@ export interface IAuthToken {
     accessToken: string;
     refreshToken: string;
     expiresAt: Date;
+    clientId: string;
 }
 
 export interface IWSAuthToken {

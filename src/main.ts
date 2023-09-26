@@ -16,9 +16,9 @@ import { BotModel } from "./models";
 
 const getBotModel = async (database: DataSource) => {
     const auth_repository = database.getRepository(AuthModel);
-    const auth_model = await auth_repository.findOne({ where: {}, order: { id: "DESC" } });
+    const auth_model = await auth_repository.findOne({ where: {}, order: { id: "DESC" }, relations: ['authToken', 'wsToken'] });
     if (auth_model) {
-        logger.log('Auth model was found!');
+        logger.log('Auth model was found!', auth_model);
         return auth_model;
     }
 
@@ -34,13 +34,12 @@ const getBotModel = async (database: DataSource) => {
     }
     new_auth_model.authToken = await database.getRepository(AuthTokenModel).save(plainToClass(AuthTokenModel, auth_data));
 
-    const ws_auth_data = await getWSToken(auth_data.accessToken, "0f25e086-385d-4442-84e8-1a818d28e79d"); //TODO clientId
+    const ws_auth_data = await getWSToken(auth_data.accessToken, auth_data.clientId);
     if (!ws_auth_data) {
         logger.error('Cannot get ws auth data');
         return;
     }
     new_auth_model.wsToken = await database.getRepository(WsTokenModel).save(plainToClass(WsTokenModel, ws_auth_data));
-    console.log('here')
     await auth_repository.save(new_auth_model);
 
     return new_auth_model;
