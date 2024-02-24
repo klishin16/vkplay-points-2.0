@@ -1,4 +1,4 @@
-import {IAPIBonus} from "./api.types.js";
+import { IAPIBonus, IAPIDrop } from "./api.types.js";
 import {IStream} from "./types.js";
 import websocket from "websocket";
 
@@ -16,7 +16,7 @@ interface IWSStreamView {
     result: {
         channel: string;
         data: {
-            data: IWSBalanceChange | IWSBonusPending;
+            data: IWSBalanceChange | IWSBonusPending | IWSDropProgress;
             offset: number;
         }
     }
@@ -37,6 +37,13 @@ interface IWSBalanceChange {
         delta: number;
         balance: number;
     }
+}
+
+interface IWSDropProgress {
+    type: 'drop_campaign_progress';
+    data: {
+        dropProgresses: IAPIDrop[]
+    };
 }
 
 

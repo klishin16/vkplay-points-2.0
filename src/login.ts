@@ -1,9 +1,9 @@
 import { IAuthToken, ICredentials } from "./types";
-import { logger } from "./logger.js";
+import { logger } from "./logger";
 import { Cookie, CookieJar } from 'tough-cookie';
 import { wrapper } from "axios-cookiejar-support";
 import axios from "axios";
-import { GET_TOKEN_URL, SIGN_IN_URL, SIGN_IN_URL2 } from "./constants.js";
+import { GET_TOKEN_URL, SIGN_IN_URL, SIGN_IN_URL2 } from "./constants";
 import Serialized = Cookie.Serialized;
 
 export const login = async (credentials: ICredentials): Promise<IAuthToken | null> => {
