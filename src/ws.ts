@@ -2,11 +2,10 @@ import websocket from 'websocket'
 import { logger } from "./logger";
 import { IStream, isWSChannelConnect, isWSStreamView, IWSEngine, IWSMessage } from "./types";
 import { WS_URL } from "./constants";
-import { gatherBonusBox, gatherDropBox } from "./api";
+import { gatherBonusBox } from "./api";
 import { AuthModel } from "./models";
 import { DataSource } from "typeorm";
 import { StreamModel } from "./models/stream.model";
-import { getReadyDrops } from "./streams";
 
 const { client: ws_client } = websocket;
 
@@ -85,21 +84,6 @@ export const startWSEngine = async (auth: AuthModel, database: DataSource)=> new
                                     break;
                                 }
                                 gatherBonusBox(stream, auth.authToken.accessToken, inner_data.data.id);
-                                break;
-                            case "drop_campaign_progress":
-                                logger.log('WS stream drop progress', ws_channels_map.get(channel)?.blogUrl);
-                                const ready_drops = getReadyDrops(inner_data)
-                                console.log('ready drops', ready_drops)
-                                if (ready_drops) {
-                                    const stream2 = ws_channels_map.get(channel);
-                                    if (!stream2) {
-                                        logger.error(`No stream for wsChannel ${channel}`);
-                                        break;
-                                    }
-                                    for (const drop of ready_drops) {
-                                        gatherDropBox(stream2, auth.authToken.accessToken, drop.id);
-                                    }
-                                }
                                 break;
                         }
                     }

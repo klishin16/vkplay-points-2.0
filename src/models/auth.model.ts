@@ -1,7 +1,7 @@
 import { Entity, JoinColumn, OneToOne } from "typeorm"
-import { BaseModel } from "./base.model";
-import { WsTokenModel } from "./ws-token.model";
-import { AuthTokenModel } from "./auth-token.model";
+import { BaseModel } from "./base.model.js";
+import { WsTokenModel } from "./ws-token.model.js";
+import { AuthTokenModel } from "./auth-token.model.js";
 
 @Entity()
 export class AuthModel extends BaseModel {

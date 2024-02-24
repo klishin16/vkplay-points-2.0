@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios"
 import { delay } from "./helpers"
 import {
     IAPIBonus,
-    IFetchPendingBonusesResponse, IFetchPendingDropsResponse,
+    IFetchPendingBonusesResponse,
     IFetchStream,
     IFetchStreamsResponse,
     IStream,
@@ -98,45 +98,5 @@ export const fetchPendingBonuses = async (stream: IStream, token: string): Promi
         .catch((e: AxiosError) => {
             logger.error(e.status + e.message)
             logger.error(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/point/pending_bonus/`)
-        })
-}
-
-export const fetchPendingDropBoxes = async (stream: IStream, token: string): Promise<IFetchPendingDropsResponse> => {
-    logger.log('fetchPendingDropBoxes', stream.blogUrl)
-    await delay(1000); // На всякий случай
-    return axios.get(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/drop_campaign/progress/`,
-         {
-            headers: {
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": `Bearer ${token}`,
-                "Origin": "https://vkplay.live",
-                "Referer": `https://vkplay.live/app/box/campaigns`
-            }
-        })
-        .then(response => response.data)
-        .catch((e: AxiosError) => {
-            logger.error(e.status + e.message)
-            logger.error(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/drop_campaign/progress/`)
-        })
-}
-
-export const gatherDropBox = async (stream: IStream, token: string, dropBoxId: number) => {
-    logger.log('gatherDropBox', stream.blogUrl)
-    await delay(1000); // На всякий случай
-    return axios.put(`https://api.vkplay.live/v1/drop_campaign/${dropBoxId}/products_request`,
-        {
-            "nextRequestInterval": 60
-        }, {
-            headers: {
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": `Bearer ${token}`,
-                "Origin": "https://vkplay.live",
-                "Referer": `https://vkplay.live/app/box/campaigns`
-            }
-        })
-        .then(response => response.data)
-        .catch((e: AxiosError) => {
-            logger.error(e.status + e.message)
-            logger.error(`https://api.vkplay.live/v1/drop_campaign/${dropBoxId}/products_request`)
         })
 }

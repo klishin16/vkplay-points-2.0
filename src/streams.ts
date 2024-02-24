@@ -1,14 +1,7 @@
-import { EStreamStatus, IBot, IFetchPendingDropsResponse, IStream, UpdateStreamsInfo } from "./types";
+import { EStreamStatus, IBot, IStream, UpdateStreamsInfo } from "./types";
 import { printStreamsInfo, printStreamsUpdateInfo, setIntervalImmediately } from "./helpers";
-import {
-    fetchPendingBonuses,
-    fetchPendingDropBoxes,
-    fetchStreamers,
-    gatherBonusBox,
-    gatherDropBox,
-    sendViewerAlive
-} from "./api";
-import { logger } from "./logger";
+import { fetchPendingBonuses, fetchStreamers, gatherBonusBox, sendViewerAlive } from "./api";
+import { logger } from "./logger.js";
 import { MAIN_PAGE } from "./constants";
 import { clearInterval } from "timers";
 import { StreamModel } from "./models/stream.model";
@@ -95,22 +88,14 @@ const openStream = async (bot: IBot, stream: IStream) => {
     logger.log('Open stream', stream.blogUrl);
     const token = bot.auth.authToken.accessToken;
     const bonuses = await fetchPendingBonuses(stream, token);
-
-    const drops_data = await fetchPendingDropBoxes(stream, token);
-    const drops = getReadyDrops(drops_data);
-    if (drops) {
-        for (const drop of drops) {
-            await gatherDropBox(stream, token, drop.id);
-        }
+    if (!bonuses) {
+        return stream;
+    }
+    for (const bonus of bonuses) {
+        await gatherBonusBox(stream, token, bonus.id);
     }
 
-    if (bonuses) {
-        for (const bonus of bonuses) {
-            await gatherBonusBox(stream, token, bonus.id);
-        }
-    }
-
-    if (!stream.wsChannelPrivate) { //channel-info:9866649#18761143
+    if (!stream.wsChannelPrivate) {
         return stream;
     }
 
@@ -142,14 +127,3 @@ export const startViewerStatusSender = (bot: IBot) => {
         })
     }, 1000 * 60)
 }
-
-export const getReadyDrops = (data: IFetchPendingDropsResponse) => data.data.dropProgresses?.reduce((drops, dropProgress) => {
-    if (dropProgress.currentRule.progress.goalReached) {
-        drops.push({
-            id: dropProgress.campaign.id,
-            title: dropProgress.campaign.title
-        })
-    }
-
-    return drops;
-}, [] as Array<{ id: number, title: string }>)

@@ -39,26 +39,3 @@ export interface IFetchStream {
         wsStreamChannelPrivate: string;
     };
 }
-
-
-export interface IAPIDrop {
-    currentRule: {
-        id: number;
-        watchingDuration: number;
-        progress: {
-            current: number;
-            goal: number;
-            goalReached: boolean;
-        }
-    },
-    campaign: {
-        id: number;
-        title: string
-    }
-}
-
-export interface IFetchPendingDropsResponse {
-    data: {
-        dropProgresses: IAPIDrop[]
-    }
-}

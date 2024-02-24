@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm";
-import { BaseModel } from "./base.model";
+import { BaseModel } from "./base.model.js";
 
 @Entity()
 export class AuthTokenModel extends BaseModel {
