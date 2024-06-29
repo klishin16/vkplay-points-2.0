@@ -18,7 +18,7 @@ export const scanStreams = async (token: string): Promise<IStream[]> => {
             name: stream_info.blog.owner.nick,
             url: MAIN_PAGE + stream_info.blog.blogUrl,
             blogUrl: stream_info.blog.blogUrl,
-            streamStatus: stream_info.stream ? EStreamStatus.ONLINE : EStreamStatus.OFFLINE,
+            streamStatus: stream_info.stream.isOnline ? EStreamStatus.ONLINE : EStreamStatus.OFFLINE,
             wsChannelPrivate: stream_info.stream?.wsStreamChannelPrivate || null
         } as IStream
     })

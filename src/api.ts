@@ -11,8 +11,10 @@ import {
 import { GET_WS_TOKEN_URL } from "./constants";
 import { logger } from "./logger";
 
+const BASE_URL = "api.live.vkplay.ru";
+
 export const fetchStreamers = async (token: string, retry: number = 0, maxRetries: number = 3): Promise<IFetchStream[] | void> => {
-    return axios.get<IFetchStreamsResponse>('https://api.vkplay.live/v1/user/public_video_stream/subscriptions', {
+    return axios.get<IFetchStreamsResponse>(`https://${BASE_URL}/v1/user/public_video_stream/subscriptions`, {
         headers: {
             "Content-type": "application/json; charset=utf-8",
             'Authorization': `Bearer ${token}`
@@ -28,19 +30,19 @@ export const fetchStreamers = async (token: string, retry: number = 0, maxRetrie
 }
 
 export const sendViewerAlive = async (token: string, stream: IStream) => {
-    return axios.put(`https://api.vkplay.live/v1/blog/${stream.blogUrl}/public_video_stream/heartbeat/viewer`,
+    return axios.put(`https://${BASE_URL}/v1/blog/${stream.blogUrl}/public_video_stream/heartbeat/viewer`,
+        { },
         {
-            "nextRequestInterval": 60
-        }, {
             headers: {
                 "Content-type": "application/json; charset=utf-8",
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'X-From-Id': '57a5e225-bca7-4794-a30c-70315b006c43'
             }
         })
         .then(response => response.data)
         .catch((e: AxiosError) => {
             logger.error(e.status + e.message)
-            logger.error(`https://api.vkplay.live/v1/blog/${stream.blogUrl}/public_video_stream/heartbeat/viewer`)
+            logger.error(`https://${BASE_URL}/v1/blog/${stream.blogUrl}/public_video_stream/heartbeat/viewer`)
         })
 }
 
@@ -68,7 +70,7 @@ export const getWSToken = async (token: string, clientId: string): Promise<IWSAu
 export const gatherBonusBox = async (stream: IStream, token: string, bonusBoxId: string) => {
     logger.log('gatherBonusBox', stream.blogUrl)
     await delay(1000); // На всякий случай
-    return axios.put(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/point/pending_bonus/${bonusBoxId}/gather`,
+    return axios.put(`https://${BASE_URL}//v1/channel/${stream.blogUrl}/point/pending_bonus/${bonusBoxId}/gather`,
         {
             "nextRequestInterval": 60
         }, {
@@ -82,21 +84,21 @@ export const gatherBonusBox = async (stream: IStream, token: string, bonusBoxId:
         .then(response => response.data)
         .catch((e: AxiosError) => {
             logger.error(e.status + e.message)
-            logger.error(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/point/pending_bonus/${bonusBoxId}/gather`)
+            logger.error(`https://${BASE_URL}/v1/channel/${stream.blogUrl}/point/pending_bonus/${bonusBoxId}/gather`)
         })
 }
 
 export const fetchPendingBonuses = async (stream: IStream, token: string): Promise<IAPIBonus[] | void> => {
-    return axios.get<IFetchPendingBonusesResponse>(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/point/pending_bonus/`, {
+    return axios.get<IFetchPendingBonusesResponse>(`https://${BASE_URL}/v1/channel/${stream.blogUrl}/point/pending_bonus/`, {
         headers: {
             "Content-type": "application/json; charset=utf-8",
             "Authorization": `Bearer ${token}`,
-            "Referer": `https://vkplay.live/${stream.blogUrl}`
+            "Referer": `https://${BASE_URL}/${stream.blogUrl}`
         }
     })
         .then(response => response.data.data.bonuses)
         .catch((e: AxiosError) => {
             logger.error(e.status + e.message)
-            logger.error(`https://api.vkplay.live/v1/channel/${stream.blogUrl}/point/pending_bonus/`)
+            logger.error(`https://${BASE_URL}/v1/channel/${stream.blogUrl}/point/pending_bonus/`)
         })
 }

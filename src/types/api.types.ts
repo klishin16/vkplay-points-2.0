@@ -34,8 +34,9 @@ export interface IFetchStream {
         hasAdultContent: boolean;
         title: string;
     };
-    stream?: {
+    stream: {
         title: string;
         wsStreamChannelPrivate: string;
+        isOnline: boolean;
     };
 }
